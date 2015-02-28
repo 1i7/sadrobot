@@ -1,0 +1,11 @@
+<% import edu.nntu.sadrobot.Model._ %>
+
+<h3>Авторы на сайте</h3>
+
+<% 
+for( author <- authors() ) { 
+%>
+<div><a href="/authors/${author.username}">${author.displayName}</a></div>
+<%
+}
+%>

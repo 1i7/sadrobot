@@ -1,0 +1,30 @@
+<%@ val params: Map[String, Seq[String]] %>
+<%@ val caption: String %>
+<%@ val form_action: String %>
+<%@ val submit_name: String %>
+<%@ val submit_value: String %>
+
+<h1>${caption}</h1>
+<form method="POST" action="${form_action}">
+    <%
+    for(param <- params) {
+    val param_name = param.key
+    for(param_value <- param.value) {
+    %>
+    <input type="hidden" name="${param_name}" value="${param_value}"/>
+    <%
+    }
+    }
+    %>
+
+    <input type="hidden" name="confirmed" value="true"/>
+
+    
+    <input type="submit" class="submit"
+           name="cancel"
+           value="Отмена"/>
+    <input type="submit" class="submit"
+           name="${submit_name}"
+           value="${submit_value}"/>
+</form>
+

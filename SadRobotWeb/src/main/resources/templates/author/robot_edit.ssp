@@ -1,0 +1,14 @@
+<% import edu.nntu.sadrobot.Model._ %>
+<%@ val robot: Robot %>
+<%@ val problem: Option[String] = None %>
+
+<h1>Править робота</h1>
+
+<% if(!problem.isEmpty) { %>
+<div style="color: red">
+    ${problem}
+</div>
+<% } %>
+
+<% render("/common/robot_edit.ssp", Map("robot" -> robot, 
+"input_name" -> "update_info", "input_value" -> "Сохранить робота")) %>

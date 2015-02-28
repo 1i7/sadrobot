@@ -1,0 +1,23 @@
+<% import edu.nntu.sadrobot.Model %>
+<%@ val order: Model.RobotOrder %>
+
+<h1>Спасибо за ваш интерес</h1>
+<div>
+    Письмо с инструкциями об оплате будет выслано на вашу электронную почту.
+</div>
+
+<h3>Статус заказа ${order.asInstanceOf[sorm.Persisted].id}</h3>
+${order.confirmTime.get}
+
+<div>
+    ваше имя: ${order.userFullName.getOrElse("")}
+</div>
+<div>
+    электронная почта: ${order.userEmail.getOrElse("")}
+</div>
+<div>
+    адрес доставки: ${order.userAddress.getOrElse("")}
+</div>
+<div>
+    комментарий: ${order.userComment.getOrElse("")}
+</div>

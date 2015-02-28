@@ -1,0 +1,119 @@
+<% import edu.nntu.sadrobot.Model._ %>
+
+<%@ val robot: Robot with sorm.Persisted %>
+<%@ val input_name: String %>
+<%@ val input_value: String %>
+
+<script type="text/javascript" src="/js/lib/right.js"></script>
+<script type="text/javascript" src="/js/lib/right-rte.js"></script>
+
+
+<form method="POST">
+    <div>
+        <label for="name">имя робота:</label>
+    </div>
+    <div>
+        <input id="name" type="text" name="name" size="25" 
+               value='${robot.name}'/>
+    </div>
+    <div>
+        <label for="sid">идентификатор:</label>
+    </div>
+    <div>
+        <input id="sid" type="text" name="sid" size="25" 
+               value='${robot.sid}'/>
+    </div>
+    <div>
+        <label for="photo1">главное фото</label>
+    </div>
+    <div>
+        <input id="photo1" type="text" name="photo1" size="25" 
+               value='${robot.photo1}'/>
+    </div>
+    
+    <h3>Дополнительная информация</h3>
+    <div>
+        <label for="otherPhotos1">фото 2:</label>
+    </div>
+    <div>
+        <input id="otherPhotos1" type="text" name="otherPhotos" size="25" 
+               value='${robot.otherPhotos.getOrElse(Seq("photo2", "photo3"))(0)}'/>
+    </div>
+    <div>
+        <label for="otherPhotos2">фото 3:</label>
+    </div>
+    <div>
+        <input id="otherPhotos2" type="text" name="otherPhotos" size="25" 
+               value='${robot.otherPhotos.getOrElse(Seq("photo2", "photo3"))(1)}'/>
+    </div>
+    <div>
+        <label for="video1">главное видео:</label>
+    </div>
+    <div>
+        <input id="video1" type="text" name="video1" size="25" 
+               value='${robot.video1.getOrElse("")}'/>
+    </div>
+    <div>
+        <label for="otherVideos1">другое видео:</label>
+    </div>
+    <div>
+        <input id="otherVideos1" type="text" name="otherVideos" size="25" 
+               value='${robot.otherVideos.getOrElse(Seq("video2"))(0)}'/>
+    </div>
+    <div>
+        <label for="description">описание:</label>
+    </div>
+    <div>
+        <textarea id="description" name="description" 
+                  data-rte="{}">${unescape(robot.description.getOrElse(""))}</textarea>
+    </div>
+    <div>
+        <label for="tags">метки:</label>
+    </div>
+    <div>
+        <input id="tags" type="text" name="tags" size="25" 
+               value='${robot.tags}'/>
+    </div>
+    <div>
+        <label for="moreInfoUrl">ссылка на подробности:</label>
+    </div>
+    <div>
+        <input id="moreInfoUrl" type="text" name="moreInfoUrl" size="25" 
+               value='${robot.moreInfoUrl.getOrElse("")}'/>
+    </div>
+    <div>
+        <label for="sourceCodeUrl">ссылка на исходный код:</label>
+    </div>
+    <div>
+        <input id="sourceCodeUrl" type="text" name="sourceCodeUrl" size="25" 
+               value='${robot.sourceCodeUrl.getOrElse("")}'/>
+    </div>
+
+    <h3>Цена</h3>
+    <div>
+        <label for="priceBtc">цена в BTC:</label>
+    </div>
+    <div>
+        <input id="priceBtc" type="text" name="priceBtc" size="25" 
+               value='${robot.priceBtc}'/>
+    </div>
+    <div>
+        <label for="priceRur">цена в RUR:</label>
+    </div>
+    <div>
+        <input id="priceRur" type="text" name="priceRur" size="25" 
+               value='${robot.priceRur}'/>
+    </div>
+    <div>
+        <label for="priceUsd">цена в USD:</label>
+    </div>
+    <div>
+        <input id="priceUsd" type="text" name="priceUsd" size="25" 
+               value='${robot.priceUsd}'/>
+    </div>
+
+    <input type="submit" class="submit" name="cancel"
+           value="Отмена"/>
+    <input type="submit" class="submit" name="${input_name}"
+           value="${input_value}"/>
+</form>

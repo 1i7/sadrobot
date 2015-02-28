@@ -1,0 +1,4 @@
+<% import edu.nntu.sadrobot.Model._ %>
+<%@ val order: RobotOrder with sorm.Persisted %>
+
+<div><a href="order/${order.sid.get}">${order.userFullName.get + ": " + order.userEmail.get}</a></div>

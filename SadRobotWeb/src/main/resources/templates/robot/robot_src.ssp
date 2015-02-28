@@ -1,0 +1,31 @@
+<% import edu.nntu.sadrobot.Model._ %>
+<% import edu.nntu.sadrobot.PublicArea %>
+
+<%@ val robot: Robot with sorm.Persisted %>
+<%@ val page: Option[RobotPage with sorm.Persisted] %>
+
+<div style="text-align: right">
+    <a href="${PublicArea.robotUrl(robot)}"><<< ${robot.name}</a>]
+
+    <% if(!robot.moreInfoUrl.isEmpty || !robot.moreInfoUrl.isEmpty) { %>
+    [<a class="tag" href="${PublicArea.robotUrl(robot)}/inaction">☄ смотреть в действии</a>]
+    <% } %>
+    [<a class="tag" href="${PublicArea.robotUrl(robot)}/manual">&#x2692; руководство</a>]
+
+    <% if(!robot.sourceCodeUrl.isEmpty || !robot.moreInfoUrl.isEmpty) { %>
+    <span class="tag_sel">[<a class="tag" href="${PublicArea.robotUrl(robot)}/src">☭ сделать самому</a>]</span>
+    <% } %>
+</div>
+
+<% if(!robot.sourceCodeUrl.isEmpty) { %>
+<h3>Исходный код и чертежи</h3>
+<div>
+    <a href="${unescape(robot.sourceCodeUrl.get)}" target="_blank">${unescape(robot.sourceCodeUrl.get)}</a>
+</div>
+<% } %>
+
+<% if(!page.isEmpty) { %>
+<div>
+    ${unescape(page.get.content)}
+</div>
+<% } %>

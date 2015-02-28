@@ -1,0 +1,28 @@
+<% import edu.nntu.sadrobot.Model %>
+<%@ val robot: Model.Robot with sorm.Persisted %>
+
+<% render("/common/robot_view2.ssp", Map("robot" -> robot)) %>
+
+<a href="/author/robots/${robot.id}/edit">редактировать</a>
+
+<a href="/author/robots/${robot.id}/pages">редактировать страницы</a>
+
+<form method="POST" action="/author/robots/${robot.id}/edit">
+    <input type="submit" class="submit" name="delete"
+           value="Удалить"/>
+    <%
+    if(!robot.published) {
+    %>
+    <input type="submit" class="submit" 
+           name="publish"
+           value="Опубликовать"/>
+    <%
+    } else {
+    %>
+    <input type="submit" class="submit" 
+           name="unpublish"
+           value="Отменить публикацию"/>
+    <%
+    }
+    %>
+</form>

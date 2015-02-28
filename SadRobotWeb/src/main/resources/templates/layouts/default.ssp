@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<%-- 
+http://scalate.github.io/scalate/documentation/user-guide.html#layouts 
+http://scalate.github.io/scalate/maven/1.5.1/scalate-core/scaladocs/org/fusesource/scalate/TemplateEngine.html
+https://github.com/scalate/scalate/blob/057547dd9979379a1f24d1c5b95f7b4c3be3e1a1/scalate-core/src/main/scala/org/fusesource/scalate/servlet/ServletTemplateEngine.scala
+Явно указать шаблон на странице: <% attributes("layout") = "/layouts/default.ssp" %>
+--%>
+
+<%@ var body: String %>
+<%@ var title: String = "Грустный робот" %>
+<html>
+    <head>
+        <title>${title}</title>
+        <meta charset="UTF-8"/>
+        <link href="/css/site.css" rel="STYLESHEET" type="text/css"/>
+        <script type="text/javascript" src="/js/site.js"></script> 
+        
+        <!-- красивые шрифты -->
+        <!-- Jura для заголовка и меню -->
+        <link href='http://fonts.googleapis.com/css?family=Jura&subset=latin,cyrillic-ext,latin-ext,cyrillic,greek' rel='stylesheet' type='text/css'>
+        
+        <script type="text/javascript">
+
+            /**
+             * Обновить иконку корзины.
+             * @returns {undefined}
+             */
+            function updateCartIcon() {
+                serverHttpRequest("/cart/icon", "",
+                        function(responseText) {
+                            document.getElementById("cart").innerHTML = responseText;
+                        });
+            }
+            /**
+             * Добавить робота в корзину.
+             * @param {type} robotId
+             * @param {type} quantity
+             * @returns {undefined}
+             */
+            function addToCart(robotId, quantity) {
+                serverHttpRequest("/api/cart/add",
+                        "id=" + robotId + "&quantity=" + quantity,
+                        function() {
+                            updateCartIcon();
+                        });
+            }
+        </script>
+    </head>
+    <body>
+        <div class="header">
+            <div class="caption">
+                Грустный робот
+            </div>
+            <!--
+            <div class="caption_content">
+                роботы с душой
+            </div>
+            -->
+            <a class="logo" href="http://1i7.livejournal.com" target="_blank"></a>
+
+            <div class="caption_content">
+                [ <a class="tag" href="/">роботы</a> ] 
+                [ <a class="tag" href="/authors">авторы</a> ] 
+                [ <a class="tag" href="/author">я автор</a> ]
+
+                <% import edu.nntu.sadrobot.SadRobotWeb._ %>
+                <% import unfiltered.scalate.UnfilteredRenderContext._ %>
+
+                <span id="cart">
+                    <% render("/common/cart_icon.ssp", 
+                    Map("count" -> edu.nntu.sadrobot.CartManager.robots(request).get.size)) %>
+                </span>
+
+                <div class="tag" style="float: right">
+                    [ пользователь: <%
+                    val user = securityCheck.remoteUser(request)
+                    if(user.isEmpty) { %>
+                    none
+                    <% } else { %>
+                    ${user.get.name} (<a href="/logout">выйти</a>)
+                    <% } %> ]
+                </div>
+            </div>
+
+        </div>
+        <div id="page">
+            <div class ="page_content">
+                ${unescape(body)}
+            </div>
+        </div>
+    </body>
+</html>

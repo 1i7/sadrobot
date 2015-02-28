@@ -1,0 +1,128 @@
+<% import edu.nntu.sadrobot.Model._ %>
+<% import edu.nntu.sadrobot.Model.Currency._ %>
+
+<%@ val currency: Currency %>
+<%-- Map [Robot, (/*quantity:*/ Int, /*price:*/ Double)] --%>
+<%@ val robots: Map [Robot, (Int, Double)] %>
+<%@ val order: RobotOrder %>
+
+<script type="text/javascript">
+
+    /**
+     * Обновить робота в корзине.
+     * @param {type} robotId
+     * @returns {undefined}
+     */
+    function updateInCart(robotId) {
+        var quantity = document.getElementById("robot_quantity_" + robotId).value;
+
+        serverHttpRequest("/api/cart/update",
+                "id=" + robotId + "&quantity=" + quantity,
+                function() {
+                    updateCart();
+                });
+    }
+    
+    /**
+     * Прибавить одного робота в корзине.
+     * @param {type} robotId
+     * @returns {undefined}
+     */
+    function addOneInCart(robotId) {
+        var quantity = parseInt(document.getElementById("robot_quantity_" + robotId).value) + 1;
+
+        serverHttpRequest("/api/cart/update",
+                "id=" + robotId + "&quantity=" + quantity,
+                function() {
+                    updateCart();
+                });
+    }
+    
+    /**
+     * Убрать одного робота в корзине.
+     * @param {type} robotId
+     * @returns {undefined}
+     */
+    function removeOneInCart(robotId) {
+        var quantity = parseInt(document.getElementById("robot_quantity_" + robotId).value) - 1;
+
+        serverHttpRequest("/api/cart/update",
+                "id=" + robotId + "&quantity=" + quantity,
+                function() {
+                    updateCart();
+                });
+    }
+
+    /**
+     * Удалить робота из корзины.
+     * @param {type} robotId
+     * @returns {undefined}
+     */
+    function removeFromCart(robotId) {
+        serverHttpRequest("/api/cart/remove", "id=" + robotId,
+                function() {
+                    updateCart();
+                });
+    }
+
+    /**
+     * Обновить корзину.
+     * @returns {undefined}
+     */
+    function updateCart() {
+        serverHttpRequest("/cart/robots", "",
+                function(responseText) {
+                    document.getElementById("cart_robots").innerHTML = responseText;
+                    updateCartIcon();
+                });
+    }
+
+</script>
+
+<form method="POST" action="/order">
+
+    <div id="cart_robots">
+        <% render("/common/cart_robots.ssp", Map("currency" -> currency, "robots" -> robots)) %>
+        <%-- Нужно восстановить атрибуты, сброшенные в cart_robots.ssp --%>
+        <% attributes("layout") = "/layouts/default.ssp" %>
+    </div>
+    <div class="submit_line" style="text-align: right">
+        <a class="button gray medium" href="javascript:updateCart()">пересчитать</a>
+    </div>
+
+    <h3>Информация о доставке</h3>
+
+    <div class="label">
+        <label for="userFullName">ваше имя</label>
+    </div>
+    <div>
+        <input id="userFullName" type="text" name="userFullName" size="80" 
+               value='${order.userFullName.getOrElse("")}'/>
+    </div>
+    <div class="label">
+        <label for="userEmail">электронная почта (для запроса об оплате)</label>
+    </div>
+    <div>
+        <input id="userEmail" type="text" name="userEmail" size="80" 
+               value='${order.userEmail.getOrElse("")}'/>
+    </div>
+    <div class="label">
+        <label for="userAddress">адрес доставки</label>
+    </div>
+    <div>
+        <textarea id="userAddress" name="userAddress" 
+                  cols="80" rows="2">${order.userAddress.getOrElse("")}</textarea>
+    </div>
+    <div class="label">
+        <label for="userComment">комментарий</label>
+    </div>
+    <div>
+        <textarea id="userComment" name="userComment" 
+                  cols="80" rows="5">${order.userComment.getOrElse("")}</textarea>
+    </div>
+    <div class="submit_line">
+        <input type="submit" class="button orange big"
+               name="review"
+               value="Просмотреть заказ"/>
+    </div>
+</form>

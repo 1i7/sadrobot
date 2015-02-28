@@ -1,0 +1,6 @@
+<%-- <% attributes("layout") = "/layouts/default.ssp" %> --%>
+<% import edu.nntu.sadrobot.Model._ %>
+
+<% for( robot <- robots() ) { %>
+<% render("/common/robot_thumb.ssp", Map("robot" -> robot)) %>
+<% } %>

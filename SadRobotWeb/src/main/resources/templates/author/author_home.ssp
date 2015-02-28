@@ -1,0 +1,13 @@
+<% import edu.nntu.sadrobot.Model._ %>
+
+<%@ val author: Author %>
+
+<div>
+    <a href="/author/robots/new">добавить робота</a>
+</div>
+
+<h3>Мои роботы</h3>
+
+<% for( robot <- robots(author, false) ) { %>
+<% render("/common/robot_thumb2.ssp", Map("robot" -> robot)) %>
+<% } %>

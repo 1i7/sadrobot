@@ -1,0 +1,127 @@
+<% import edu.nntu.sadrobot.Model._ %>
+<% import edu.nntu.sadrobot.PublicArea %>
+
+<%@ val robot: Robot with sorm.Persisted %>
+
+<div style = "overflow: auto; margin-top: 20px">
+    <a href="${PublicArea.robotUrl(robot)}">
+        <img style="float: left; margin-right: 20px" 
+             src="${robot.photo1}" alt="${robot.name}" width="300"/>
+    </a>
+
+    <div>
+        <h1 style="margin-top: 0px; margin-bottom: 0px">
+            <a href="${PublicArea.robotUrl(robot)}">${robot.name}</a>
+        </h1>
+
+        <div style="margin-top: 0px; text-align: right; font-size: 12px">
+            <a href="/authors/${robot.author.username}">автор: ${robot.author.displayName}</a>
+        </div>
+
+        <div style="margin-top: 10px; text-align: right; font-size: 20px">
+            ${robot.priceRur} ${Currency.RUR}
+        </div>
+
+        <%--
+        несколько иконок на всякий случай:
+
+        DINGBATS
+
+        ❤
+        HEAVY BLACK HEART
+        http://www.fileformat.info/info/unicode/char/2764/index.htm
+
+        ✈
+        AIRPLANE
+        http://www.fileformat.info/info/unicode/char/2708/index.htm
+
+        ✖
+        HEAVY MULTIPLICATION X
+        http://www.fileformat.info/info/unicode/char/2716/index.htm
+
+        ✚
+        HEAVY GREEK CROSS
+        http://www.fileformat.info/info/unicode/char/271a/index.htm
+
+
+
+        MISCELLANEOUS_SYMBOLS 
+
+        ☄
+        COMET
+        http://www.fileformat.info/info/unicode/char/2604/index.htm
+
+        ☭
+        HAMMER AND SICKLE
+        http://www.fileformat.info/info/unicode/char/262d/index.htm
+
+        ⚒
+        &#x2692;
+        HAMMER AND PICK
+        http://www.fileformat.info/info/unicode/char/2692/index.htm
+
+        ⚙ 
+        GEAR
+        http://www.fileformat.info/info/unicode/char/2699/index.htm
+
+        ⛏
+        PICK
+        http://www.fileformat.info/info/unicode/char/26cf/index.htm
+
+        ⛟ 
+        BLACK TRUCK
+        http://www.fileformat.info/info/unicode/char/26df/index.htm
+
+
+        MISCELLANEOUS_SYMBOLS_AND_PICTOGRAPHS 
+
+        💔
+        BROKEN HEART
+        http://www.fileformat.info/info/unicode/char/1F494/index.htm
+
+        🌠
+        &#x1f320;
+        SHOOTING STAR
+        http://www.fileformat.info/info/unicode/char/1f320/index.htm
+
+        🎥
+        MOVIE CAMERA
+        http://www.fileformat.info/info/unicode/char/1f3a5/index.htm
+
+        🐛
+        BUG (сороконожка)
+        http://www.fileformat.info/info/unicode/char/1f41b/index.htm
+
+        🔧
+        WRENCH
+        http://www.fileformat.info/info/unicode/char/1f527/index.htm
+
+        🔨
+        HAMMER
+        http://www.fileformat.info/info/unicode/char/1f528/index.htm
+
+        --%>
+
+        <% if(!robot.moreInfoUrl.isEmpty || !robot.moreInfoUrl.isEmpty) { %>
+        <div style="margin-top: 10px">
+            [<a class="tag" href="${PublicArea.robotUrl(robot)}/inaction">☄ смотреть в действии</a>]
+        </div>
+        <% } %>
+        <div style="margin-top: 10px">
+            [<a class="tag" href="${PublicArea.robotUrl(robot)}/manual">&#x2692; руководство</a>]
+        </div>
+        
+        <% if(!robot.sourceCodeUrl.isEmpty || !robot.moreInfoUrl.isEmpty) { %>
+        <div style="margin-top: 10px">
+            [<a class="tag" href="${PublicArea.robotUrl(robot)}/src">☭ сделать самому</a>]
+        </div>
+        <% } %>
+        
+        <div style="margin-top: 25px">
+            [<a class="tag" href="javascript:addToCart(${robot.id}, 1)">❤ купить готовый: 1шт</a>
+            <a class="tag" href="javascript:addToCart(${robot.id}, 3)">3шт</a>
+            <a class="tag" href="javascript:addToCart(${robot.id}, 5)">5шт</a>
+            <a class="tag" href="javascript:addToCart(${robot.id}, 10)">10шт</a>]
+        </div>
+    </div>
+</div>

@@ -1,0 +1,73 @@
+<% attributes("layout") = "" %>
+
+<% import edu.nntu.sadrobot.Model._ %>
+<% import edu.nntu.sadrobot.Model.Currency._ %>
+<% import edu.nntu.sadrobot.PublicArea %>
+
+<%@ val currency: Currency %>
+<%-- Map [Robot, (/*quantity:*/ Int, /*price:*/ Double)] --%>
+<%@ val robots: Map [Robot, (Int, Double)] %>
+
+<!-- Пока не будем выбирать валюту -->
+<input id="currency" type="hidden" name="currency"
+       value='${currency}'/>
+
+<div style="display: table; width: 100%">
+    <div style="display: table-row;">
+        <div style="display: table-cell">
+        </div>
+        <div style="display: table-cell">
+        </div>
+        <div style="display: table-cell; text-align: right; font-size: 12px; font-weight: bold">
+            количество
+        </div>
+        <div style="display: table-cell; text-align: right; font-size: 12px; font-weight: bold">
+            стоимость
+        </div>
+    </div>
+
+    <% for( (robot, (quantity, price)) <- robots ) { %>
+    <input type="hidden" name="robot"
+           value="${robot.asInstanceOf[sorm.Persisted].id}"/>
+
+    <div style="display: table-row;">
+        <div style="display: table-cell; vertical-align: middle;">
+            <a href="${PublicArea.robotUrl(robot.asInstanceOf[Robot with sorm.Persisted])}">
+                <img src="${robot.photo1}" alt="${robot.name}" height="64"/>
+            </a>
+        </div>
+        <div style="display: table-cell; vertical-align: middle;">
+            <a href="${PublicArea.robotUrl(robot.asInstanceOf[Robot with sorm.Persisted])}">${robot.name}</a>
+        </div>
+        <div style="display: table-cell; vertical-align: middle; text-align: right">
+            <a class="btn" 
+               href="javascript:removeOneInCart(${robot.asInstanceOf[sorm.Persisted].id})">-</a>
+            <input id="robot_quantity_${robot.asInstanceOf[sorm.Persisted].id}"
+                   type="text" name="robot" size="4"
+                   value="${quantity}"
+                   onchange="javascript:updateInCart(${robot.asInstanceOf[sorm.Persisted].id})"/>
+            <a class="btn"
+               href="javascript:addOneInCart(${robot.asInstanceOf[sorm.Persisted].id})">+</a>
+
+        </div>
+        <div style="display: table-cell; vertical-align: middle; text-align: right">
+            <div>
+                ${price * quantity} ${currency}
+            </div>
+            <div style="font-style: italic; font-size: 10px">
+                ${price} ${currency} / шт.
+            </div>
+        </div>
+        <div style="display: table-cell; vertical-align: middle; text-align: right">
+            <a class="btn" style="font-size: 12px"
+               href="javascript:removeFromCart(${robot.asInstanceOf[sorm.Persisted].id})">✖</a>
+        </div>
+    </div>
+    <% } %>
+</div>
+<div style="margin-top: 20px; text-align: right; font-size: 14px;">
+    <span style="font-weight: bold">подытог:</span> ${orderRobotsPrice(robots)} ${currency}
+</div>
+<div style="text-align: right; font-size: 10px; font-style: italic">
+    (не включает стоимость доставки)
+</div>

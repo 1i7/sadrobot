@@ -1,0 +1,7 @@
+<% import edu.nntu.sadrobot.Model._ %>
+
+<h1>Заказы</h1>
+
+<% for( order <- orders() ) { %>
+<% render("/common/order_thumb.ssp", Map("order" -> order)) %>
+<% } %>

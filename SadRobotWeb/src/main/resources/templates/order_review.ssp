@@ -1,0 +1,106 @@
+<% import edu.nntu.sadrobot.Model._ %>
+<% import edu.nntu.sadrobot.PublicArea %>
+
+<%@ val order: RobotOrder %>
+
+<h1>Проверьте информацию о заказе</h1>
+
+<div style="display: table; width: 100%">
+    <div style="display: table-row;">
+        <div style="display: table-cell">
+        </div>
+        <div style="display: table-cell">
+        </div>
+        <div style="display: table-cell; text-align: right; font-size: 12px; font-weight: bold">
+            количество
+        </div>
+        <div style="display: table-cell; text-align: right; font-size: 12px; font-weight: bold">
+            стоимость
+        </div>
+    </div>
+
+    <% for( (robot, (quantity, price)) <- order.robots ) { %>
+    <div style="display: table-row;">
+        <div style="display: table-cell; vertical-align: middle">
+            <a href="${PublicArea.robotUrl(robot.asInstanceOf[Robot with sorm.Persisted])}">
+                <img src="${robot.photo1}" alt="${robot.name}" height="64"/>
+            </a>
+        </div>
+        <div style="display: table-cell; vertical-align: middle">
+            <a href="${PublicArea.robotUrl(robot.asInstanceOf[Robot with sorm.Persisted])}">${robot.name}</a>
+        </div>
+        <div style="display: table-cell; vertical-align: middle; text-align: right">
+            ${quantity}
+        </div>
+        <div style="display: table-cell; vertical-align: middle; text-align: right">
+            ${price * quantity} ${order.currency}
+        </div>
+    </div>
+    <% } %>
+</div>
+<div style="margin-top: 20px; text-align: right; font-size: 14px;">
+    <span style="font-weight: bold">подытог:</span> ${orderRobotsPrice(order.robots)} ${order.currency}
+</div>
+<div style="text-align: right; font-size: 10px; font-style: italic">
+    (не включает стоимость доставки)
+</div>
+
+<h3>Информация о доставке</h3>
+<div class="label">
+    ваше имя
+</div>
+<div>
+    ${order.userFullName.getOrElse("")}
+</div>
+<div class="label">
+    электронная почта
+</div>
+<div>
+    ${order.userEmail.getOrElse("")}
+</div>
+<div class="label">
+    адрес доставки
+</div>
+<div>
+    ${order.userAddress.getOrElse("")}
+</div>
+<div class="label">
+    комментарий
+</div>
+<div>
+    ${order.userComment.getOrElse("")}
+</div>
+
+<form method="POST">
+    <!-- Пока не будем выбирать валюту -->
+    <input id="currency" type="hidden" name="currency"
+           value='${order.currency}'/>
+    <% 
+    // robots: Map [Robot, (/*quantity:*/ Int, /*price:*/ Double)],
+    if(!order.robots.isEmpty) for( robotInfo <- order.robots ) { 
+    %>
+    <div>
+        <input type="hidden" name="robot"
+               value="${robotInfo.key.asInstanceOf[sorm.Persisted].id}"/>
+        <input type="hidden" name="robot" 
+               value="${robotInfo.value._1}"/>
+    </div>
+    <% } %>
+
+    <input type="hidden" name="userFullName"
+           value='${order.userFullName.getOrElse("")}'/>
+    <input type="hidden" name="userEmail"
+           value='${order.userEmail.getOrElse("")}'/>
+    <input type="hidden" name="userAddress"
+           value='${order.userAddress.getOrElse("")}'/>
+    <input type="hidden" name="userComment"
+           value='${order.userComment.getOrElse("")}'/>
+
+    <div  class="submit_line">
+        <a class="button gray medium" href="/cart">изменить</a>
+        <input type="submit" class="button red big"
+               name="confirm" 
+               value="Отправить заказ"/>
+    </div>
+</form>
+

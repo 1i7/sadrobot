@@ -1,0 +1,5 @@
+<% import edu.nntu.sadrobot.Model %>
+
+<%@ val robot: Model.Robot with sorm.Persisted %>
+
+<% render("/common/robot_view.ssp", Map("robot" -> robot)) %>

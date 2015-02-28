@@ -1,0 +1,19 @@
+<% import edu.nntu.sadrobot.Model %>
+<%@ val robot: Model.Robot with sorm.Persisted %>
+
+<div style="margin-top: 0px; margin-bottom: 0px">
+    <a href="/author/robots/${robot.id}"><<< ${robot.name}</a>
+</div>
+
+<div>
+<a href="/author/robots/${robot.id}/pages/manual/edit">инструкции</a>
+</div>
+<div>
+<a href="/author/robots/${robot.id}/pages/inaction/edit">в действии</a>
+</div>
+<div>
+<a href="/author/robots/${robot.id}/pages/gallery/edit">галерея</a>
+</div>
+<div>
+<a href="/author/robots/${robot.id}/pages/src/edit">исходный код</a>
+</div>

@@ -1,0 +1,8 @@
+<% import edu.nntu.sadrobot.Model._ %>
+<%@ val robot: Robot with sorm.Persisted %>
+
+<div>
+    <img src="${robot.photo1}" alt="${robot.name}" width="300"/>
+
+    <a href="/author/robots/${robot.id}">${robot.name}</a>
+</div>

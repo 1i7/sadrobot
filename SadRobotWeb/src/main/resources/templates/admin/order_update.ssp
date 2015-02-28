@@ -1,0 +1,159 @@
+<% import edu.nntu.sadrobot.Model._ %>
+<%@ val order: RobotOrder %>
+<a href="/admin/orders">к списку заказов</a>
+
+<h1>Заказ ${order.asInstanceOf[sorm.Persisted].id}</h1>
+<div>
+<%if(!order.confirmTime.isEmpty) {%>
+создан: ${order.confirmTime.get}
+<%}%>
+</div>
+<div>
+<%if(!order.invoiceTime.isEmpty) {%>
+выставлен счет: ${order.invoiceTime.get}
+<%}%>
+</div>
+<div>
+<%if(!order.paymentTime.isEmpty) {%>
+оплачен: ${order.paymentTime.get}
+<%}%>
+</div>
+<div>
+<%if(!order.shipmentTime.isEmpty) {%>
+отправлен: ${order.shipmentTime.get}
+<%}%>
+</div>
+<div>
+<%if(!order.completeTime.isEmpty) {%>
+выполнен: ${order.completeTime.get}
+<%}%>
+</div>
+<div>
+<%if(!order.cancelTime.isEmpty) {%>
+отменен: ${order.cancelTime.get}
+<%}%>
+</div>
+
+<h3>Статус</h3>
+<div>
+    обработка заказа -> выставлен счет -> получена оплата -> заказ отправлен
+</div>
+<div>
+    статус: ${order.status}
+</div>
+<form method="POST">
+    <input type="hidden" name="status"
+           value="${OrderStatus.nextStatus(order.status)}"/>
+    <input type="submit" class="submit"
+           name="update_status"
+           value="Обновить статус: перевести в ${OrderStatus.nextStatus(order.status)}"/>
+</form>
+
+<form method="POST">
+    <input type="hidden" name="status"
+           value="${OrderStatus.Canceled}"/>
+    
+    <input type="submit" class="submit"
+           name="update_status"
+           value="Отменить заказ"/>
+</form>
+
+<h3>Информация о заказе</h3>
+<div>
+    автор:
+    <%
+    if(!order.author.isEmpty) {
+    %>
+    <a href='/author/${order.author.get.username}'>${order.author.get.displayName}</a>
+    <%
+    } else {
+    %>
+    Неизвестен
+    <%
+    }
+    %>
+</div>
+<div>
+    <% 
+    // robots: Map [Robot, (/*quantity:*/ Int, /*price:*/ Double)],
+    for( robotInfo <- order.robots ) { 
+    %>
+    <div>
+        <a href="/robots/${robotInfo.key.asInstanceOf[sorm.Persisted].id}">${robotInfo.key.name}</a>:
+        ${robotInfo.value._1} штук по ${robotInfo.value._2} ${order.currency}. 
+    </div>
+    <%
+    }
+    %>
+</div>
+всего: ${orderRobotsPrice(order.robots)} ${order.currency}
+
+<form method="POST">
+    <div>
+        <label for="shippingPrice">стоимость доставки:</label>
+        <input id="shippingPrice" type="text" name="shippingPrice" size="25" 
+               value='${order.shippingPrice.getOrElse(0.0)}'/> ${order.currency}
+    </div>
+    <div>
+        <label for="discount">скидка:</label>
+        <input id="discount" type="text" name="discount" size="25" 
+               value='${order.discount.getOrElse(0.0)}'/> ${order.currency}
+    </div>
+    <div>
+        ИТОГО: ${order.totalPrice.getOrElse(0.0)} ${order.currency}
+    </div>
+    <input type="submit" class="submit"
+           name="update_price"
+           value="Обновить цену заказа"/>
+</form>
+
+
+<h3>Оплата</h3>
+<form method="POST">
+    <div>
+        <label for="paymentAddressBtc">адрес оплаты (кошелек BTC):</label>
+        <input id="paymentAddressBtc" type="text" name="paymentAddressBtc" size="25" 
+               value='${order.paymentAddressBtc.getOrElse("")}'/>
+    </div>
+    <input type="submit" class="submit"
+           name="update_payment"
+           value="Обновить информацию об оплате"/>
+</form>
+
+<h3>Покупатель</h3>
+<div>
+    имя: ${order.userFullName.getOrElse("")}
+</div>
+<div>
+    электронная почта: ${order.userEmail.getOrElse("")}
+</div>
+<div>
+    адрес доставки: ${order.userAddress.getOrElse("")}
+</div>
+<div>
+    комментарий покупателя: ${order.userComment.getOrElse("")}
+</div>
+
+<h3>Комментарий для покупателя</h3>
+<div>
+    ${order.publicComment.getOrElse("Без комментариев")}
+</div>
+<form method="POST">
+    <textarea name="publicComment" cols="80" rows="5">${order.publicComment.getOrElse("")}</textarea>
+
+    <input type="submit" class="submit"
+           name="update_public_comment"
+           value="Обновить комментарий для покупателя"/>
+</form>
+
+<h3>Комментарий</h3>
+<div>
+    ${order.comment.getOrElse("Без комментариев")}
+</div>
+<form method="POST">
+    <textarea name="comment" cols="80" rows="5">${order.comment.getOrElse("")}</textarea>
+
+    <input type="submit" class="submit"
+           name="update_comment"
+           value="Обновить комментарий"/>
+</form>

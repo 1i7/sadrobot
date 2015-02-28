@@ -1,0 +1,16 @@
+<% attributes("layout") = "" %>
+
+<%@ val count: Int %>
+
+[ <a class="tag" href="/cart">
+    <% if(count > 0) { %>
+    <span 
+        <%-- colored heart --%>
+        <%-- ffcc00 --%>
+        style="color: #bd2424">❤</span>
+    <% } else { %>
+    <%-- broken heart: http://www.fileformat.info/info/unicode/char/1F494/index.htm --%>
+    &#x1f494;
+    <% } %>
+    корзина<% if(count > 0) { %>: ${count}<% } %>
+</a> ]
